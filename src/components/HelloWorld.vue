@@ -1,26 +1,22 @@
 <template>
   <div class="app-container">
+    <button @click="start">Start</button>
+    <div>
+      <img
+        @click="onSelectImg(item)"
+        style="
+          width: 300px;
+          height: 300px;
+          object-fit: cover;
+          margin-right: 20px;
+        "
+        v-for="item in imgListAll"
+        :key="item"
+        :src="item"
+        alt=""
+      />
+    </div>
     <div id="lightgallery">
-      <a
-        data-lg-size="1600-1067"
-        data-src="https://phongvu.vn/cong-nghe/wp-content/uploads/sites/2/2018/07/hinh-nen-full-hd-cho-laptop-1.jpg"
-      >
-        <img
-          style="width: 300px; height: 300px; object-fit: cover;"
-          src="https://phongvu.vn/cong-nghe/wp-content/uploads/sites/2/2018/07/hinh-nen-full-hd-cho-laptop-1.jpg"
-        />
-      </a>
-
-      <a
-        data-lg-size="1600-1067"
-        data-src="https://img.freepik.com/premium-photo/closeup-nature-view-colorful-leaves_860528-2622.jpg"
-      >
-        <img
-          style="width: 300px; height: 300px; object-fit: cover;"
-          src="https://img.freepik.com/premium-photo/closeup-nature-view-colorful-leaves_860528-2622.jpg"
-        />
-      </a>
-
     </div>
   </div>
 </template>
@@ -34,30 +30,50 @@ export default {
   name: "HelloWorld",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
+      showGlary: false,
+      imgListAll: [
+        "https://phongvu.vn/cong-nghe/wp-content/uploads/sites/2/2018/07/hinh-nen-full-hd-cho-laptop-1.jpg",
+        "https://img.freepik.com/premium-photo/closeup-nature-view-colorful-leaves_860528-2622.jpg",
+        "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80",
+      ],
+      imgListSelect: [],
     };
   },
 
   mounted() {
-    const el = document.getElementById('lightgallery')
-    window.lightGallery(el, {
-        mode: 'lg-slide',
-        speed: 500,
-        autoplayFirstVideo: false,
-        pager: false,
-        galleryId: "nature",
+    // this.start()
+  },
+
+  methods: {
+    onSelectImg(img) {
+      console.log("img", img);
+      this.imgListSelect.push(img);
+    },
+
+    start() {
+      this.showGlary = true;
+      let dynamicElements = [];
+      this.imgListSelect.forEach((value) => {
+        dynamicElements.push({
+          src: value,
+          thumb: value,
+        });
+      });
+
+      const lg = document.getElementById("lightgallery");
+      window.lightGallery(lg, {
+        mode: "lg-slide",
+        download: false,
+        thumbnail: true,
+        dynamic: true,
+        dynamicEl: dynamicElements,
         autoplayFirstVideo: true,
-        plugins: [lgZoom, lgThumbnail],
-        enableSwipe: true, // required
-        showMaximizeIcon: true, // required
-        mobileSettings: {
-          controls: false,
-          showCloseIcon: false,
-          download: false,
-          rotate: false
-        }
-      })
-  }
+        loadVimeoThumbnail: false,
+      });
+
+      window.lightGallery(lg);
+    },
+  },
 };
 </script>
 
