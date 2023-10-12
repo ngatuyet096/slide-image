@@ -9,8 +9,8 @@
 
     </div>
     <div> 
-      <button>Upload image-title</button>
-      <!-- <img
+      <input type="file" name="photo" accept="image/*" multiple @change="onUploadImage($event)"/>
+      <img
         @click="onSelectImg(item)"
         style="
           width: 300px;
@@ -18,12 +18,12 @@
           object-fit: cover;
           margin-right: 20px;
         "
-        v-for="item in imgListAll"
+        v-for="item in filesUpload"
         :key="item"
         :src="item"
         alt=""
       />
-      <button @click="start">Start</button> -->
+      <button @click="start">Start</button>
     </div>
 
     <div id="lightgallery">
@@ -50,6 +50,7 @@ export default {
       imgListSelect: [],
       folderName: '',
       activeFolder: '',
+      filesUpload: [],
     };
   },
 
@@ -66,6 +67,20 @@ export default {
     onAddFolder() {
       this.folderList.unshift(this.folderName)
     },
+
+    onUploadImage(event) {
+      let files = event.target.files;
+      for (let i = 0; i < files.length; i++) { 
+        var file = files[i];
+        if (!file.type.match('image')) 
+        continue;
+        let picReader = new FileReader();
+        picReader.onload = (e) => {
+            this.filesUpload.push(e.target.result);
+        };
+        picReader.readAsDataURL(file);
+      }
+    }, 
 
     start() {
       this.showGlary = true;
